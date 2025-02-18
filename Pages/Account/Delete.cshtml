@@ -1,0 +1,218 @@
+﻿@page
+@model WebApplication8.Pages.Account.DeleteModel
+@{
+    ViewData["Title"] = "حذف حساب مدير";
+}
+
+<div class="container-fluid py-5 rtl-container">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+            <!-- Search Section -->
+            <div class="card shadow mb-4">
+                <div class="card-header" style="background-color: #005E66; color: white;">
+                    <h3 class="mb-0"><i class="fas fa-search me-2"></i> حذف الحساب </h3>
+                </div>
+                <div class="card-body">
+                    <div class="form-group position-relative">
+                        <label for="username" class="form-label">اسم المستخدم</label>
+                        <div class="input-group">
+                            <input type="text"
+                                   class="form-control form-control-lg"
+                                   id="username"
+                                   name="username"
+                                   placeholder="ادخل اسم المستخدم..."
+                                   aria-label="Search users">
+                        </div>
+
+                        <div id="userList" class="dropdown-menu w-100 mt-1" style="display: none;"></div>
+                        <div id="searchError" class="text-danger mt-2" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Details Section -->
+            @if (Model.UserToDelete != null)
+            {
+                <div class="card shadow mt-4">
+                    <div class="card-header" style="background-color: #005E66; color: white;">
+                        <h4 class="mb-0"><i class="fas fa-user-circle me-2"></i>تفاصيل المستخدم</h4>
+                    </div>
+                    <div class="card-body">
+                        <dl class="row">
+                            <dt class="col-sm-4">اسم المستخدم:</dt>
+                            <dd class="col-sm-8">@Model.UserToDelete.UserName</dd>
+
+                            <dt class="col-sm-4">البريد الإلكتروني:</dt>
+                            <dd class="col-sm-8">@Model.UserToDelete.Email</dd>
+                        </dl>
+
+                        <form method="post" class="mt-4">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" asp-for="Username" value="@Model.UserToDelete.UserName" />
+
+                            <!-- Delete Confirmation Modal Trigger -->
+                            <div class="d-flex justify-content-center">
+                                <button type="button"
+                                        class="btn btn-danger btn-lg w-50"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#deleteModal">
+                                    <i class="fas fa-trash-alt me-2"></i> حذف المستخدم
+                                </button>
+                            </div>
+
+                               
+
+                            <!-- Delete Confirmation Modal -->
+                            <div class="modal fade" id="deleteModal" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content" style="border-radius: 1rem;">
+                                        <div class="modal-header bg-danger text-white">
+                                            <h5 class="modal-title">تأكيد الحذف</h5>
+                                            <button type="button"
+                                                    class="close p-1 text-white text-2xl font-thin leading-none hover:text-gray-200 transition-colors duration-200"
+                                                    aria-label="Close"
+                                                    onclick="$('#deleteModal').modal('hide');">
+                                                <!-- SVG for the X button -->
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x">
+                                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <p class="lead">هل أنت متأكد أنك تريد حذف المستخدم <strong>@Model.UserToDelete.UserName</strong>؟</p>
+                                            <p class="text-muted">هذا الإجراء لا يمكن التراجع عنه!</p>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">إلغاء</button>
+                                            <button type="submit" class="btn btn-danger">تأكيد الحذف</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                        </form>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .rtl-container {
+        direction: rtl;
+        text-align: right;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    .input-group-text {
+        background-color: #e9ecef;
+        border-left: none;
+    }
+
+    #username {
+        border-right: none;
+    }
+
+    .card, .modal-content {
+        border-radius: 1rem;
+    }
+
+    .card-header {
+        background-color: #005E66;
+        color: white;
+    }
+
+    .close {
+        background: none;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: color 0.2s ease;
+    }
+
+        .close svg {
+            width: 2rem; /* Adjust size as needed */
+            height: 2rem; /* Adjust size as needed */
+        }
+
+        .close:hover {
+            color: #000; /* Light gray color on hover */
+        }
+</style>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        let searchTimeout;
+
+        $('#username').on('input', function () {
+            clearTimeout(searchTimeout);
+            const searchTerm = $(this).val().trim();
+
+            if (searchTerm.length >= 2) {
+                $('#searchLoader').show();
+                $('#searchError').hide();
+
+                searchTimeout = setTimeout(() => {
+                    $.ajax({
+                        url: '?handler=SearchUsers',
+                        data: { term: searchTerm },
+                        success: (data) => {
+                            const userList = $('#userList');
+                            userList.empty();
+
+                            if (data.length > 0) {
+                                data.forEach(user => {
+                                    userList.append(`
+                                        <div class="dropdown-item py-2">
+                                            <i class="fas fa-user me-2"></i>
+                                            ${user.userName}
+                                        </div>
+                                    `);
+                                });
+                                userList.show();
+                            } else {
+                                userList.hide();
+                                $('#searchError').text('لا توجد نتائج').show();
+                            }
+                        },
+                        error: () => {
+                            $('#searchError').text('حدث خطأ أثناء البحث').show();
+                        },
+                        complete: () => {
+                            $('#searchLoader').hide();
+                        }
+                    });
+                }, 500);
+            } else {
+                $('#userList').hide();
+                $('#searchError').hide();
+            }
+        });
+
+        // Handle user selection
+        $('#userList').on('click', '.dropdown-item', function () {
+            const selectedUsername = $(this).text().trim();
+            $('#username').val(selectedUsername);
+            window.location.href = `?username=${encodeURIComponent(selectedUsername)}`;
+        });
+
+        // Handle modal confirmation
+        $('#deleteModal').on('show.bs.modal', function () {
+            $(this).find('.modal-body strong').text($('#username').val());
+        });
+    });
+</script>

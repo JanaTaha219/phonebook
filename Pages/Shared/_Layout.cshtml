@@ -1,0 +1,199 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - دليل الهاتف</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebApplication8.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Kufi+Arabic:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="/icons/najah.jpg">
+
+
+    <style>
+        body {
+            min-height: 100vh; /* Full page height */
+            margin: 0;
+            display: flex;
+            flex-direction: column; /* Stack header and content vertically */
+            font-family: "Noto Kufi Arabic", serif !important;
+            font-optical-sizing: auto;
+        }
+
+        header {
+            flex-shrink: 0; /* Prevent header from resizing */
+        }
+
+        .content {
+            flex-grow: 1; /* Allow content to expand and center */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: clamp(50px, 10vh, 100px); /* Dynamic padding based on viewport */
+        }
+
+        .container{
+            font-family: "Noto Kufi Arabic", serif;
+            font-optical-sizing: auto;
+        }
+
+        footer {
+            flex-shrink: 0;
+            width: 100%;
+            bottom:0;
+            margin-top: auto; /* Pushes footer to the bottom */
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            background-color: #005E66;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            padding: 20px;
+        }   
+
+        .left-align{
+            text-align: left;
+        }
+
+        .right-align {
+            text-align: right;
+        }
+        .center-align{
+            text-align: left;
+            margin-left: 120px
+        }       
+
+        /* Media query for smaller screens (mobile phones) */
+        @@media (max-width: 768px) {
+           
+
+            .left-align {
+                text-align: left;
+            }
+
+            .right-align {
+                text-align: left;
+            }
+
+            .center-align {
+                text-align: left;
+                margin-left: 0px;
+            }
+        }
+
+
+        @@media (max-width: 480px) {
+            
+
+            .content {
+                padding-bottom: clamp(30px, 8vh, 50px); /* Reduced padding for smaller screens */
+            }
+        }
+
+        /* Accessibility enhancements */
+        body, header, .content {
+            color: #333; /* Ensure good contrast for readability */
+            font-family: Arial, sans-serif; /* Simple and legible font */
+        }
+    </style>
+
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light" style="background-color: #005E66; color: white; direction: rtl;">
+            <div class="container">
+                <a class="navbar-brand" asp-area="" asp-page="/Index" style="color: white;">دليل الهاتف</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        @* add links here *@
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <div class="content">
+        <div class="container">
+            <main role="main" class="pb-3">
+                @await Html.PartialAsync("_adminPartial")
+
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <footer class="ant-layout-footer footer-padding">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-md-4 left-align">
+                    <address>
+                        <strong>Nablus, Palestine</strong><br>
+                        P.O. Box: 7<br>
+                        Phone: +970 (9) 2345113<br>
+                        Fax: +970 (9) 2345982<br>
+                    </address>
+                </div>
+
+                <div class="col-12 col-md-4 ">
+                    <div class="center-align">
+                        <strong>Emails:</strong><br>
+                        <a href="mailto:info@najah.edu" style="color: white;">info@najah.edu</a><br>
+						<a href="mailto:pr@najah.edu" style="color: white;">pr@najah.edu</a><br>
+					</div>
+                </div>
+                <div class="col-12 col-md-4 right-align">
+                    <div>
+                        <a href="https://www.facebook.com/ANajahUni/" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 50 50"
+                                     style="fill:#FFFFFF;">
+                                    <path d="M41,4H9C6.24,4,4,6.24,4,9v32c0,2.76,2.24,5,5,5h32c2.76,0,5-2.24,5-5V9C46,6.24,43.76,4,41,4z M37,19h-2c-2.14,0-3,0.5-3,2 v3h5l-1,5h-4v15h-5V29h-4v-5h4v-3c0-4,2-7,6-7c2.9,0,4,1,4,1V19z"></path>
+                                </svg>
+
+                        </a>
+
+                        <a href="https://www.instagram.com/ANajahUni/" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0,0,256,256"
+                                     style="fill:#FFFFFF;">
+                                    <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.33333,5.33333)"><path d="M15,4c-6.06341,0 -11,4.93659 -11,11v18c0,6.06341 4.93659,11 11,11h18c6.06341,0 11,-4.93659 11,-11v-18c0,-6.06341 -4.93659,-11 -11,-11zM15,6h18c4.98259,0 9,4.01741 9,9v18c0,4.98259 -4.01741,9 -9,9h-18c-4.98259,0 -9,-4.01741 -9,-9v-18c0,-4.98259 4.01741,-9 9,-9zM35,11c-1.105,0 -2,0.895 -2,2c0,1.105 0.895,2 2,2c1.105,0 2,-0.895 2,-2c0,-1.105 -0.895,-2 -2,-2zM24,14c-5.51133,0 -10,4.48867 -10,10c0,5.51133 4.48867,10 10,10c5.51133,0 10,-4.48867 10,-10c0,-5.51133 -4.48867,-10 -10,-10zM24,16c4.43067,0 8,3.56933 8,8c0,4.43067 -3.56933,8 -8,8c-4.43067,0 -8,-3.56933 -8,-8c0,-4.43067 3.56933,-8 8,-8z"></path></g></g>
+                                </svg>
+
+                        </a>
+
+
+                        <a href="https://www.linkedin.com/school/anajahuni/" target="_blank">
+                                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0,0,256,256"
+                                     style="fill:#FFFFFF;">
+                                    <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(5.12,5.12)"><path d="M41,4h-32c-2.76,0 -5,2.24 -5,5v32c0,2.76 2.24,5 5,5h32c2.76,0 5,-2.24 5,-5v-32c0,-2.76 -2.24,-5 -5,-5zM17,20v19h-6v-19zM11,14.47c0,-1.4 1.2,-2.47 3,-2.47c1.8,0 2.93,1.07 3,2.47c0,1.4 -1.12,2.53 -3,2.53c-1.8,0 -3,-1.13 -3,-2.53zM39,39h-6c0,0 0,-9.26 0,-10c0,-2 -1,-4 -3.5,-4.04h-0.08c-2.42,0 -3.42,2.06 -3.42,4.04c0,0.91 0,10 0,10h-6v-19h6v2.56c0,0 1.93,-2.56 5.81,-2.56c3.97,0 7.19,2.73 7.19,8.26z"></path></g></g>
+                                </svg>
+                        </a>
+
+
+                    </div>
+
+                </div>
+                <div class="ant-col css-fuo4z5">
+                    <span class="ant-typography sc-gKHVLF esHvtZ css-fuo4z5" dir="rtl">
+                        @DateTime.Now.Year © جامعة النجاح. جميع الحقوق محفوظة
+                    </span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

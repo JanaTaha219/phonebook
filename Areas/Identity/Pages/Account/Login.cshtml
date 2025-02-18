@@ -1,0 +1,55 @@
+﻿@page
+@model LoginModel
+
+@{
+    ViewData["Title"] = "تسجيل الدخول";
+}
+
+@* <h1 class="text-center">@ViewData["Title"]</h1> *@
+<div class="container d-flex justify-content-center"
+     style="min-height: 80vh; align-items: center;">
+    <div class="card shadow-sm" style="width: 400px; border-radius: 15px;">
+        <div class="card-body">
+            <section>
+                <form id="account" method="post" dir="rtl">
+                    <h2 class="text-center mb-4">تسجيل الدخول إلى حسابك</h2>
+                    <hr />
+                    <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.UsernameOrEmail" class="form-control" aria-required="true" placeholder="اسم المستخدم أو البريد الإلكتروني" />
+                        <label asp-for="Input.UsernameOrEmail">اسم المستخدم أو البريد الإلكتروني</label>
+                        <span asp-validation-for="Input.UsernameOrEmail" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input asp-for="Input.Password" class="form-control" type="password" autocomplete="current-password" aria-required="true" placeholder="كلمة المرور" />
+                        <label asp-for="Input.Password">كلمة المرور</label>
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-check mb-3 text-start">
+                        <input class="form-check-input" asp-for="Input.RememberMe" id="rememberMe" />
+                        <label class="form-check-label" for="rememberMe">
+                            تذكرني
+                        </label>
+                    </div>
+
+
+
+                    <div class="d-grid">
+                        <button id="login-submit" type="submit" class="btn btn-lg" style="color:white;background-color: #005E66; border-color: #005E66">تسجيل الدخول</button>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <a id="forgot-password" asp-page="./ForgotPassword" class="link-primary">نسيت كلمة المرور؟</a>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

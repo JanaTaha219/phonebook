@@ -1,0 +1,235 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<div class="container py-3" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-10 col-sm-8 col-xl-6 position-relative">
+            <!-- Added position-relative -->
+            <div class="form-group">
+                <input type="text" id="searchInput" class="form-control search-input"
+                       placeholder="ابحث بالاسم..." aria-label="بحث بالاسم"
+                       aria-haspopup="listbox" aria-expanded="false" />
+                <div id="searchResults" role="listbox" class="search-results"></div>
+                <div class="spinner-border text-primary position-absolute"
+                     id="spinner" style="display:none; left: 15px; top: 12px;"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let searchTimeout;
+    const searchInput = document.getElementById('searchInput');
+    const searchResults = document.getElementById('searchResults');
+    const spinner = document.getElementById('spinner');
+
+    // Improved touch handling
+    let isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+    // Enhanced input handling
+    searchInput.addEventListener('input', function(e) {
+        const term = e.target.value.trim();
+        clearTimeout(searchTimeout);
+
+        if (term === '') {
+            hideResults();
+            return;
+        }
+
+        spinner.style.display = 'block';
+        searchTimeout = setTimeout(() => {
+            fetch(`?handler=SearchUsers&term=${encodeURIComponent(term)}`)
+                .then(response => response.json())
+                .then(users => {
+                    showResults(users);
+                    spinner.style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    spinner.style.display = 'none';
+                });
+        }, 300);
+    });
+
+    // Keyboard navigation
+    searchInput.addEventListener('keydown', (e) => {
+        const items = searchResults.querySelectorAll('.list-group-item');
+        if (!items.length) return;
+
+        switch(e.key) {
+            case 'ArrowDown':
+                e.preventDefault();
+                items[0]?.focus();
+                break;
+            case 'ArrowUp':
+                e.preventDefault();
+                items[items.length - 1]?.focus();
+                break;
+        }
+    });
+
+    function showResults(users) {
+        searchResults.innerHTML = users.length > 0
+            ? users.map(user => `
+                <button type="button" role="option" class="list-group-item text-right"
+                        data-id="${user.id}"
+                        tabindex="-1"
+                        onfocus="this.classList.add('active')"
+                        onblur="this.classList.remove('active')"
+                        onclick="selectUser(${user.id}, '${user.name.replace("'", "\\'")}')">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span>${user.name}</span>
+                        ${user.additionalInfo ? `<small class="text-muted">${user.additionalInfo}</small>` : ''}
+                    </div>
+                </button>
+              `).join('')
+            : `<div class="list-group-item text-muted">لا توجد نتائج</div>`;
+
+        adjustResultsPosition();
+        searchResults.style.display = 'block';
+        searchInput.setAttribute('aria-expanded', 'true');
+    }
+
+    // Add event listeners for window resize/scroll
+    window.addEventListener('resize', adjustResultsPosition);
+    window.addEventListener('scroll', adjustResultsPosition);
+
+     function adjustResultsPosition() {
+        const inputRect = searchInput.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const availableSpace = viewportHeight - inputRect.bottom - 20;
+
+        searchResults.style.maxHeight = `${Math.min(400, availableSpace)}px`;
+    }
+
+    function hideResults() {
+        searchResults.style.display = 'none';
+        searchInput.setAttribute('aria-expanded', 'false');
+    }
+
+    // Enhanced click outside detection
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.form-group')) hideResults();
+    });
+
+    // Mobile orientation change handling
+    window.addEventListener('orientationchange', hideResults);
+</script>
+
+<style>
+    :root {
+        --search-radius: 1.5rem;
+        --search-padding: 0.75rem 1.25rem;
+    }
+
+    .search-input {
+        padding: var(--search-padding);
+        border-radius: var(--search-radius);
+        font-size: 1rem;
+        transition: all 0.2s ease;
+        color: #005E66;
+    }
+
+        .search-input:focus {
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+        }
+
+    .form-group {
+        position: sticky;
+        top: 20px; /* Adjust this value based on your header height */
+        z-index: 1000;
+        background: white;
+        padding: 10px 0;
+    }
+
+    .search-results {
+        position: absolute;
+        width: 100%;
+        max-height: min(400px, calc(100vh - 200px)); /* Prevent overflow beyond viewport */
+        overflow-y: auto;
+        border-radius: 0.75rem;
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+        margin-top: 0.5rem;
+        display: none;
+        background: white;
+        border: 1px solid #dee2e6;
+        z-index: 1001;
+        top: 100%; /* Position directly below input */
+        left: 0;
+        
+    }
+    .list-group-item {
+        border: none;
+        padding: 0.75rem 1.25rem;
+        transition: all 0.2s ease;
+        cursor: pointer;
+        text-align: right;
+        color: #005E66;
+    }
+
+        .list-group-item:hover,
+        .list-group-item:focus,
+        .list-group-item.active {
+            background-color: #f8f9fa;
+            transform: translateX(-5px);
+        }
+
+    @@media (max-width: 768px) {
+        .search-input
+
+    {
+        font-size: 16px; /* Better for mobile readability */
+        padding: 1rem;
+    }
+
+    .search-results {
+        max-height: 50vh;
+        border-radius: 1rem;
+
+    }
+
+    .list-group-item {
+        padding: 1rem;
+    }
+
+    /* Disable hover effects on touch devices */
+    @@media (hover: none) {
+        .list-group-item:hover
+
+    {
+        transform: none;
+        background-color: inherit;
+    }
+
+    }
+    }
+
+    @@media (max-width: 576px) {
+        .container
+
+    {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+
+    .col-10 {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    }
+
+    /* High contrast mode */
+    @@media (prefers-contrast: more) {
+        .list-group-item
+
+    {
+        border: 2px solid currentColor;
+    }
+
+    }
+</style>

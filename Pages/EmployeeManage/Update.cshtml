@@ -1,0 +1,198 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@model UpdateModel
+@{
+    ViewData["Title"] = "تحديث بيانات الموظف";
+}
+
+@if (User.HasClaim("ManageEmployee", "true"))
+{
+    <p style=" text-align: center; padding-left:130px; direction:rtl; font-size: 18px; color: #005E66; margin-top:20px;">
+        هذه الصفحة تتيح للمسؤول تعديل بيانات الموظفين.
+    </p>
+    <!-- Alerts Section -->
+    @if (!string.IsNullOrEmpty(Model.SuccessMessage))
+    {
+        <div class="alert alert-success alert-dismissible fade show d-flex align-items-center" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>
+            <div>@Model.SuccessMessage</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (!string.IsNullOrEmpty(Model.ErrorMessage))
+    {
+        <div class="alert alert-danger alert-dismissible fade show d-flex align-items-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>
+            <div>@Model.ErrorMessage</div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+<partial name="_Search" />
+
+<div class="container mt-4">
+    
+        
+    <!-- Form Card -->
+    <div class="card shadow-lg border-0" id="editForm" style="display: none;">
+            <div class="card-header text-white py-3" style="background-color:#005E66;">
+            <h5 class="card-title mb-0" style="text-align:center;">
+                <i class="bi bi-pencil-square me-2"></i>تحديث بيانات الموظف
+            </h5>
+        </div>
+
+        <div class="card-body">
+            <form method="post">
+                <input type="hidden" asp-for="Employee.Id" id="selectedUserId" />
+
+                <div class="row g-4">
+                    <!-- Personal Info Section -->
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input asp-for="Employee.Name" class="form-control" placeholder="الاسم الكامل" />
+                            <label asp-for="Employee.Name" class="form-label">الاسم الكامل</label>
+                            <span asp-validation-for="Employee.Name" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-floating">
+                            <input asp-for="Employee.Email" class="form-control" placeholder="البريد الإلكتروني" type="email" />
+                            <label asp-for="Employee.Email" class="form-label">البريد الإلكتروني</label>
+                            <span asp-validation-for="Employee.Email" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info Section -->
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input asp-for="Employee.LocalPhone" class="form-control" placeholder="الهاتف الداخلي" required />
+                            <label asp-for="Employee.LocalPhone" class="form-label">الهاتف الداخلي <span class="text-danger">*</span></label>
+                            <span asp-validation-for="Employee.LocalPhone" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input asp-for="Employee.PhoneNumber" class="form-control" placeholder="رقم الجوال" type="tel" />
+                            <label asp-for="Employee.PhoneNumber" class="form-label">رقم الجوال</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input asp-for="Employee.OtherNumbers" class="form-control" placeholder="أرقام إضافية" />
+                            <label asp-for="Employee.OtherNumbers" class="form-label">أرقام إضافية</label>
+                            <small class="text-muted form-text">افصل بين الأرقام المتعددة بفواصل</small>
+                        </div>
+                    </div>
+
+                    <!-- Job Details Section -->
+                        <div class="col-md-4">
+                            <div class="form-floating mb-3">
+                                <select asp-for="Employee.Department" class="form-select" aria-label="اختر القسم">
+                                    <option value="" disabled selected>اختر القسم</option>
+                                    @foreach (var department in (List<string>)ViewData["Departments"])
+                                    {
+                                        <option value="@department">@department</option>
+                                    }
+                                </select>
+                                <label asp-for="Employee.Department">القسم</label>
+                            </div>
+                        </div>
+
+
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input asp-for="Employee.Position" class="form-control" placeholder="المسمى الوظيفي" />
+                            <label asp-for="Employee.Position" class="form-label">المسمى الوظيفي</label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="form-floating">
+                            <input asp-for="Employee.OfficeLocation" class="form-control" placeholder="موقع المكتب" />
+                            <label asp-for="Employee.OfficeLocation" class="form-label">موقع المكتب</label>
+                        </div>
+                    </div>
+
+                    <!-- Notes Section -->
+                    <div class="col-12">
+                        <div class="form-floating">
+                            <textarea asp-for="Employee.Notes" class="form-control" placeholder="ملاحظات الموظف" style="height: 100px"></textarea>
+                            <label asp-for="Employee.Notes" class="form-label">ملاحظات الموظف</label>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                        <div class="col-12 text-end mt-4">
+
+                            <button type="submit" class="btn btn-lg px-5" style="background-color:#005E66; color:white;">
+                            <i class="bi bi-save me-2"></i>حفظ التعديلات
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+}
+<script>
+    function selectUser(id, name) {
+        fetch(`?handler=UserDetails&id=${id}`)
+            .then(response => response.json())
+            .then(user => {
+                 document.getElementById('selectedUserId').value = user.id;
+                document.getElementById('Employee_Name').value = user.name;
+                document.getElementById('Employee_Email').value = user.email || '';
+                document.getElementById('Employee_LocalPhone').value = user.localPhone;
+                document.getElementById('Employee_Department').value = user.department || '';
+                document.getElementById('Employee_Position').value = user.position || '';
+                document.getElementById('Employee_OfficeLocation').value = user.officeLocation || '';
+                document.getElementById('Employee_Notes').value = user.notes || '';
+                document.getElementById('Employee_PhoneNumber').value = user.phoneNumber || '';
+                document.getElementById('Employee_OtherNumbers').value = user.otherNumbers || '';
+                document.getElementById('editForm').style.display = 'block';
+                hideResults();
+            });
+    }
+</script>
+
+<style>
+    .card {
+        border-radius: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-floating {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+    }
+
+    .form-label {
+        font-weight: 500;
+    }
+
+    .btn-lg {
+        padding: 0.75rem 2rem;
+        border-radius: 0.75rem;
+    }
+
+    @@media (max-width: 768px) {
+        .card-header h5 {
+            font-size: 1.25rem;
+        }
+
+        .btn-lg {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .form-control {
+            font-size: 0.9rem;
+        }
+    }
+</style>

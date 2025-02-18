@@ -1,0 +1,154 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@model WebApplication8.Pages.EmployeeManage.AddEmployeeManuallyModel
+@{
+    ViewData["Title"] = "إضافة موظف جديد";
+}
+
+@if (User.HasClaim("ManageEmployee", "true"))
+{
+<div class="container mt-5" dir="rtl">
+    <div class="row justify-content-center">
+        <div class="col-md-10 col-lg-8">
+            <div class="card shadow-lg">
+                    <div class="card-header  text-white" style="background-color:#005E66;">
+                    <h3 class="mb-0"><i class="fas fa-user-plus me-2"></i>إضافة موظف جديد</h3>
+                </div>
+                <div class="card-body">
+                    <!-- Status Messages -->
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            @TempData["SuccessMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+                    @if (TempData["ErrorMessage"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            @TempData["ErrorMessage"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form method="post" class="needs-validation" novalidate>
+                        @if (!ViewData.ModelState.IsValid)
+                        {
+                            <div asp-validation-summary="All" class="alert alert-danger"></div>
+                        }
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Employee.Name" class="form-control" placeholder=" " required />
+                                    <label asp-for="Employee.Name" class="form-label">
+                                        الاسم الكامل <span class="text-danger">*</span>
+                                    </label>
+                                    <span asp-validation-for="Employee.Name" class="invalid-feedback"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Employee.LocalPhone" class="form-control" placeholder=" "
+                                           type="tel" required />
+                                    <label asp-for="Employee.LocalPhone" class="form-label">
+                                        الهاتف المحلي <span class="text-danger">*</span>
+                                    </label>
+                                    <span asp-validation-for="Employee.LocalPhone" class="invalid-feedback"></span>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Employee.Email" class="form-control" placeholder=" " type="email" />
+                                    <label asp-for="Employee.Email" class="form-label">البريد الإلكتروني</label>
+                                    <span asp-validation-for="Employee.Email" class="invalid-feedback"></span>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select asp-for="Employee.Department" class="form-select">
+                                        <option value="">اختر القسم</option>
+                                        @foreach (var department in (List<string>)ViewData["Departments"])
+                                        {
+                                            <option value="@department">@department</option>
+                                        }
+                                    </select>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Employee.Position" class="form-control" placeholder=" " />
+                                    <label asp-for="Employee.Position" class="form-label">المنصب</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Employee.OfficeLocation" class="form-control" placeholder=" " />
+                                    <label asp-for="Employee.OfficeLocation" class="form-label">موقع المكتب</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Employee.PhoneNumber" class="form-control" placeholder=" " />
+                            <label asp-for="Employee.PhoneNumber" class="form-label">رقم الجوال</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Employee.OtherNumbers" class="form-control" placeholder=" " />
+                            <label asp-for="Employee.OtherNumbers" class="form-label">أرقام إضافية</label>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Employee.Notes" class="form-control" placeholder=" "
+                                      style="height: 100px"></textarea>
+                            <label asp-for="Employee.Notes" class="form-label">ملاحظات / تعليقات</label>
+                        </div>
+
+                            <div class="d-grid gap-2 d-md-flex justify-content-md-start">
+
+                                <button type="submit" class="btn" style="background-color:#005E66; color:white;">
+                                <i class="fas fa-save me-2"></i>إضافة الموظف
+                            </button>
+                            <a href="/" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>العودة
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+}
+<style>
+    .card {
+        border-radius: 15px;
+        overflow: hidden;
+    }
+
+    .form-floating label {
+        padding-right: 2.5rem;
+        left: auto !important;
+        right: 0;
+    }
+
+    .form-control {
+        border-radius: 0.5rem;
+        padding: 1rem 1.25rem;
+        text-align: right;
+    }
+
+    .invalid-feedback {
+        padding-right: 2.5rem;
+        text-align: right;
+    }
+
+    .alert {
+        text-align: right;
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -1,0 +1,96 @@
+﻿@page
+@model WebApplication8.Pages.Account.CreateModel
+@{
+    ViewData["Title"] = "إنشاء حساب مدير";
+}
+
+<h2 class="text-center mb-4">إنشاء مستخدم جديد</h2>
+
+@if (TempData["CreatSuccessMessage"] != null)
+{
+    <div class="alert alert-success mt-4">
+        @TempData["CreatSuccessMessage"]
+    </div>
+}
+@if (!ViewData.ModelState.IsValid)
+{
+    <div class="alert alert-danger mt-4">
+        <ul>
+            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+            {
+                <li>@error.ErrorMessage</li>
+            }
+        </ul>
+    </div>
+}
+<form method="post" class="needs-validation" novalidate>
+    <div style="text-align:end;">
+
+    <div class="form-group mb-3">
+			<label for="Username"> :اسم المستخدم</label>
+        <input asp-for="Username" class="form-control" required />
+        <span asp-validation-for="Username" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+            <label for="Email">:البريد الإلكتروني</label>
+        <input asp-for="Email" class="form-control" required />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+    <div class="form-group mb-3">
+            <label for="Password">:كلمة المرور</label>
+        <input asp-for="Password" type="password" class="form-control" required />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group mb-3">
+        <div class="form-check">
+            <input asp-for="CanUpdateUserRole" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" for="CanUpdateUserRole">تحديث دور المستخدم</label>
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <div class="form-check">
+            <input asp-for="CanCreateAdmin" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" for="CanCreateAdmin">إنشاء مدير</label>
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <div class="form-check">
+            <input asp-for="CanDeleteAdmin" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" for="CanDeleteAdmin">حذف المدير</label>
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <div class="form-check">
+            <input asp-for="CanManageEmployee" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" for="CanManageEmployee">ادارة الموظفين</label>
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <div class="form-check">
+            <input asp-for="ViewAnalytics" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" for="ViewAnalytics">عرض تحليلات النظام</label>
+        </div>
+    </div>
+    <div class="form-group mb-3">
+        <div class="form-check">
+            <input asp-for="EditMainPage" class="form-check-input" type="checkbox" />
+            <label class="form-check-label" for="EditMainPage"> تعديل الصفحة الرئيسية</label>
+        </div>
+    </div>
+    </div>
+
+    <div style="justify-content:center;align-items:center; display:flex;">
+        <button type="submit" class="btn" style="background-color:#005E66;color:white; width:50%;">
+            إنشاء مستخدم
+        </button>
+    </div>
+       
+
+</form>
+
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

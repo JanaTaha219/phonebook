@@ -1,0 +1,61 @@
+﻿@page
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<IdentityUser> UserManager
+@model WebApplication8.Pages.EmployeeManage.UploadExcelModel
+@{
+    ViewData["Title"] = "اضافة عن طريق اكسل";
+}
+@if (User.HasClaim("ManageEmployee", "true"))
+{
+<div class="container mt-5">
+    <div class="card shadow">
+            <div class="card-header" style="background-color: #005E66; color: white;">
+            <h3 class="mb-0" style="text-align:right">حفظ بيانات الموظفين من إكسل</h3>
+        </div>
+
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data">
+               
+
+                <div class="form-group">
+                        @if (TempData["Message"] != null)
+                        {
+                            <div class="alert alert-info mt-3">@TempData["Message"]</div>
+                        }
+                        @if (TempData["Error"] != null)
+                        {
+                            <div class="alert alert-danger mt-3">@TempData["Error"]</div>
+                        }
+                    <div class="custom-file">
+
+                        <input type="file" class="custom-file-input" id="excelFile" name="excelFile" accept=".xlsx,.xls">
+                        <label class="custom-file-label" for="excelFile"></label>
+                    </div>
+                    <small class="form-text text-muted">
+                        <br>
+                        :يجب أن يحتوي ملف إكسل على الأعمدة التالية
+                        <br>
+                        Name, Email, LocalPhone, Department, Position, OfficeLocation, Notes, PhoneNumber, OtherNumbers
+                    </small>
+                </div>
+
+                    <button type="submit" class="btn mt-3" style="background-color: #005E66; color: white;">
+                    <i class="fas fa-upload"></i> حفظ في قاعدة البيانات
+                </button>
+            </form>
+
+
+            
+        </div>
+    </div>
+</div>
+}
+@section Scripts {
+    <script>
+        document.querySelector('.custom-file-input').addEventListener('change', function(e) {
+            var fileName = document.getElementById("excelFile").files[0].name;
+            var nextSibling = e.target.nextElementSibling;
+            nextSibling.innerText = fileName;
+        });
+    </script>
+}

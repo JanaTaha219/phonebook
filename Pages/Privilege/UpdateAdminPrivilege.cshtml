@@ -1,0 +1,449 @@
+﻿@page
+@model WebApplication8.Pages.Privilege.UpdateAdminPrivilegeModel
+@{
+    ViewData["Title"] = "تحديث صلاحيات المدير";
+    Layout = "_Layout";
+}
+
+<style>
+
+    .update-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        align-items: stretch; /* Ensures the container takes full width */
+        padding-top: 50px;
+        padding-bottom: 80px;
+        height: auto;
+        width: 100%; /* Ensure full width */
+    }
+
+    /* Search input styling */
+    #searchBox {
+        width: 100%;
+        padding: 1.2rem;
+        font-size: 1.1rem;
+        border: 2px solid #007bff;
+        border-radius: 8px;
+        margin-top: 20px;
+        margin-bottom: 1.5rem;
+        transition: all 0.3s ease;
+    }
+
+        #searchBox:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0,123,255,0.2);
+        }
+
+    /* User list styling */
+    #userList {
+        width: 100%;
+        list-style: none;
+        padding: 0;
+        margin: 1rem 0;
+        border-radius: 8px;
+        border: none;
+    }
+
+        #userList.has-items {
+            border: 1px solid #ddd;
+        }
+
+    .user-item {
+        padding: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+        border-bottom: 1px solid #eee;
+    }
+
+        .user-item:hover {
+            background-color: #f8f9fa;
+        }
+
+    /* Table styles */
+    .table-responsive {
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+        margin: 2rem 0;
+        width: 100%; /* Ensure it takes full width */
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 1.2rem;
+        text-align: right;
+        border: 1px solid #dee2e6;
+    }
+
+    th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+    }
+
+
+    /* Checkbox styling */
+    input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        margin-left: 0.5rem;
+    }
+
+    /* Button styling */
+    .btn-primary {
+        padding: 0.8rem 2rem;
+        font-size: 1.1rem;
+        border-radius: 8px;
+        background-color: #007bff;
+        border: none;
+        transition: all 0.3s ease;
+        color: white;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+    /* Alert messages */
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 1rem 0;
+        display: none;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    @@media (max-width: 768px) {
+        /* Table restructuring for mobile */
+        .table-responsive table,
+        .table-responsive thead,
+        .table-responsive tbody,
+        .table-responsive th,
+        .table-responsive td,
+        .table-responsive tr {
+            display: block;
+            width: 100%;
+        }
+
+        .table-responsive thead {
+            display: none;
+        }
+
+        .table-responsive tr {
+            margin-bottom: 1rem;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-responsive td {
+            direction:rtl;
+            text-align: right;
+            padding: 1rem;
+            border: none;
+            position: relative;
+        }
+
+            .table-responsive td:empty {
+                display: none;
+            }
+
+            .table-responsive td.has-privilege::before,
+            .table-responsive td.no-privilege::before {
+                content: attr(data-label);
+                font-weight: bold;
+                margin-left: 0.5rem;
+                color: #666;
+            }
+
+            .table-responsive td.has-privilege::before {
+                content: "ممنوحة: ";
+                color: #28a745;
+            }
+
+            .table-responsive td.no-privilege::before {
+                content: "غير ممنوحة: ";
+                color: #dc3545;
+            }
+            /* Checkbox adjustments */
+            .table-responsive td label {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                width: 100%;
+            }
+
+        .table-responsive input[type="checkbox"] {
+            order: -1;
+            margin-left: 0;
+            transform: scale(1.2);
+        }
+        /* Mobile-specific adjustments */
+        #searchBox {
+            font-size: 1rem;
+            padding: 1.2rem;
+        }
+
+        .user-item {
+            padding: 1.2rem;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            width: 100%;
+            padding: 1.2rem;
+            font-size: 1.1rem;
+        }
+
+        #selectedUserName {
+            font-size: 1.3rem;
+            text-align: center;
+            margin: 1.5rem 0;
+        }
+
+        .container {
+            padding: 0 1rem;
+        }
+    }
+
+    @@media (max-width: 480px) {
+        /* Extra small devices */
+        #searchBox {
+            font-size: 0.95rem;
+            padding: 0.8rem;
+        }
+
+        .user-item {
+            padding: 1rem;
+            font-size: 1rem;
+        }
+
+        #userList {
+            max-height: 40vh;
+        }
+
+        .table-responsive td {
+            padding: 0.8rem;
+            font-size: 0.95rem;
+        }
+
+        .btn-primary {
+            padding: 1rem;
+            font-size: 1rem;
+        }
+    }
+</style>
+
+<div class="update-container" style="color: #005E66;">
+    <p style=" text-align: right; direction:rtl; font-size: 18px;">
+        هذه الصفحة تتيح للمسؤول منح أو إلغاء صلاحيات المسؤولين.
+    </p>
+    <input type="text" id="searchBox" placeholder="ابحث باستخدام اسم المستخدم" style="color: #005E66;" />
+    <ul id="userList"></ul>
+    <div id="message" class="alert"></div>
+
+    <div id="privilegeTable" style="display:none;">
+
+        <h3 id="selectedUserName" style="direction:rtl" class="mb-4">الصلاحيات ل:</h3>
+        <form method="post">
+            @Html.AntiForgeryToken()
+            
+            <input type="hidden" asp-for="SelectedUserId" id="selectedUserId" />
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>الصلاحيات الممنوحة</th>
+                            <th>الصلاحيات غير الممنوحة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="privilegeRows"></tbody>
+                </table>
+            </div>
+            <div style="display:flex;  justify-content:center; align-content:center;">
+                <button type="submit" class="btn-primary" style=" background-color: #005E66 !important;">حفظ التعديلات</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const arabicPrivileges = {
+            "UpdateUserRole": "تحديث صلاحيات المستخدم",
+            "CreateAdmin": "إنشاء مدير جديد",
+            "DeleteAdmin": "حذف المدير",
+            "ViewAnalytics": "عرض الإحصائيات والتحليلات",
+            "EditMainPage": "تعديل الصفحة الرئيسية",
+            "ManageEmployee":"ادارة الموظفين"
+        };
+
+        let currentUser = null;
+
+        // Search users
+        document.getElementById("searchBox").addEventListener("input", async function () {
+            const searchTerm = this.value;
+            const userList = document.getElementById("userList");
+
+            if (searchTerm.length >= 2) {
+                try {
+                    const response = await fetch(`?handler=SearchUsers&term=${encodeURIComponent(searchTerm)}`);
+                    const data = await response.json();
+
+                    userList.innerHTML = "";
+                    userList.classList.remove('has-items');
+
+                    if (data.length > 0) {
+                        userList.classList.add('has-items');
+                        data.forEach(user => {
+                            const li = document.createElement("li");
+                            li.className = "user-item";
+                            li.dataset.userid = user.id;
+                            li.textContent = user.userName;
+                            userList.appendChild(li);
+                        });
+                    }
+                } catch (error) {
+                    console.error("Error fetching users:", error);
+                }
+            } else {
+                userList.innerHTML = "";
+                userList.classList.remove('has-items');
+            }
+        });
+
+        // Select user
+        document.getElementById("userList").addEventListener("click", async function (event) {
+            if (event.target.classList.contains("user-item")) {
+                currentUser = {
+                    id: event.target.dataset.userid,
+                    name: event.target.textContent
+                };
+
+                document.getElementById("selectedUserId").value = currentUser.id;
+                document.getElementById("selectedUserName").textContent += currentUser.name;
+                document.getElementById("privilegeTable").style.display = "block";
+                document.getElementById("message").style.display = "none";
+                document.getElementById("privilegeRows").innerHTML = "<tr><td colspan='2'>جاري تحميل الصلاحيات...</td></tr>";
+
+                try {
+                    const response = await fetch(`?handler=UserPrivileges&userId=${currentUser.id}`);
+                    const data = await response.json();
+                    const privilegeRows = document.getElementById("privilegeRows");
+                    privilegeRows.innerHTML = "";
+
+                    data.userPrivileges.forEach(privilege => {
+                        privilegeRows.innerHTML += `
+                            <tr>
+                                <td class="has-privilege">
+                                    <label>
+                                        <input type="checkbox" name="SelectedPrivileges" value="${privilege}" checked />
+                                        ${arabicPrivileges[privilege]}
+                                    </label>
+                                </td>
+                                <td></td>
+                            </tr>`;
+                    });
+
+                    data.missingPrivileges.forEach(privilege => {
+                        privilegeRows.innerHTML += `
+                            <tr>
+                                <td></td>
+                                <td class="no-privilege">
+                                    <label>
+                                        <input type="checkbox" name="SelectedPrivileges" value="${privilege}" />
+                                        ${arabicPrivileges[privilege]}
+                                    </label>
+                                </td>
+                            </tr>`;
+                    });
+                } catch (error) {
+                    console.error("Error fetching user privileges:", error);
+                }
+            }
+        });
+
+        // Handle checkbox changes
+        document.getElementById("privilegeRows").addEventListener("change", function (event) {
+            if (event.target.type === "checkbox") {
+                const row = event.target.closest("tr");
+                const isChecked = event.target.checked;
+                const arabicText = event.target.parentElement.textContent.trim();
+                const privilegeKey = event.target.value;
+
+                row.innerHTML = isChecked ? `
+                    <td class="has-privilege">
+                        <label>
+                            <input type="checkbox" name="SelectedPrivileges" value="${privilegeKey}" checked />
+                            ${arabicText}
+                        </label>
+                    </td>
+                    <td></td>` : `
+                    <td></td>
+                    <td class="no-privilege">
+                        <label>
+                            <input type="checkbox" name="SelectedPrivileges" value="${privilegeKey}" />
+                            ${arabicText}
+                        </label>
+                    </td>`;
+            }
+        });
+
+        // Form submission
+        document.querySelector("form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            formData.append('__RequestVerificationToken', document.querySelector('input[name="__RequestVerificationToken"]').value);
+
+            try {
+                const response = await fetch(window.location.href, {
+                    method: "POST",
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: new URLSearchParams(formData).toString()
+                });
+
+                if (response.ok) {
+                    alert("تم حفظ التعديلات بنجاح");
+                } else {
+                    alert("حدث خطأ أثناء الحفظ");
+                }
+            } catch (error) {
+                console.error("Error submitting form:", error);
+                alert("حدث خطأ أثناء الحفظ");
+            }
+        });
+
+    });
+
+    window.addEventListener('resize', handleLayout);
+
+    function handleLayout() {
+        // Adjust container padding based on sidebar visibility
+        const sidebarWidth = document.querySelector('.sidebar')?.offsetWidth || 0;
+        document.querySelector('.container').style.paddingLeft =
+            window.innerWidth >= 768 ? `${sidebarWidth}px` : '15px';
+    }
+
+    // Initial layout adjustment
+    handleLayout();
+
+</script>
